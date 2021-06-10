@@ -2,17 +2,18 @@ version: '3.2'
 services:
 
   portainer:
-    image: portainer/portainer:latest
+    image: portainer/portainer-ce:alpine
     container_name: portainer
-    # create password -> htpasswd -nb -B "admin" "admin"  | cut -d ":" -f 2
-    # then escape each $ character inside the hashed password with another $ (resulting in $$)
-    command: [ "-H", "unix:///var/run/docker.sock", "--admin-password='$$2y$$05$$5.f89aR0QTMBK/QP87U3ge8rGQ0x8OFbNQjZ6rqqgs8gGd.oNeaHC'" ]
     restart: unless-stopped
     ports:
       - 9990:9000
+    # create password -> htpasswd -nb -B "admin" "admin"  | cut -d ":" -f 2
+    # then escape each $ character inside the hashed password with another $ (resulting in $$)
+    command: ["-H", "unix:///var/run/docker.sock", "--admin-password='admin:$$2y$$05$$KDBqZjgiszg7b9Fs5HxD9Ou6twIc0bL.7u/9HpEcullR1/OCPlEEK'"]
     volumes:
+      - ./portainer/portainer_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer-data:/data
+      - /etc/timezone:/etc/timezone:ro
 
 volumes:
   portainer-data:
